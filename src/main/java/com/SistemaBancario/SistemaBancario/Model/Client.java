@@ -13,7 +13,7 @@ public class Client {
     private String name;
     private String email;
     @OneToOne
-    @JoinColumn(name = "tb_account")
+    @JoinColumn(name = "account_id")
     private Account accounts;
     @OneToMany(mappedBy = "client", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Notification> notifications;

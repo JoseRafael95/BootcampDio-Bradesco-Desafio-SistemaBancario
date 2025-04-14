@@ -16,4 +16,36 @@ public class CreditCard {
     private double cardLimit;
     @OneToMany(mappedBy = "creditCard")
     private List<Transaction> transactions;
+
+    public long getNumber() {
+        return number;
+    }
+
+    public void setNumber(long number) {
+        this.number = number;
+    }
+
+    public Date getExpirationDate() {
+        return expirationDate;
+    }
+
+    public void setExpirationDate(Date expirationDate) {
+        this.expirationDate = expirationDate;
+    }
+
+    public double getCardLimit() {
+        return cardLimit;
+    }
+
+    public void setCardLimit(double cardLimit) {
+        this.cardLimit = cardLimit;
+    }
+
+    public List<Transaction> getTransactions() {
+        return transactions;
+    }
+
+    public void setTransactions(List<Transaction> transactions) {
+        this.transactions = transactions;
+    }
 }

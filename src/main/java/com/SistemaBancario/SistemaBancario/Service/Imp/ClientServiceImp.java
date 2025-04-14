@@ -1,7 +1,8 @@
 package com.SistemaBancario.SistemaBancario.Service.Imp;
 
+import com.SistemaBancario.SistemaBancario.Model.AccountRepository;
 import com.SistemaBancario.SistemaBancario.Model.Client;
-import com.SistemaBancario.SistemaBancario.Model.ClienteRepository;
+import com.SistemaBancario.SistemaBancario.Model.ClientRepository;
 import com.SistemaBancario.SistemaBancario.Service.ClientService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -13,7 +14,8 @@ import java.util.Optional;
 @Service
 public class ClientServiceImp implements ClientService {
     @Autowired
-    private ClienteRepository clienteRepository;
+    private ClientRepository clienteRepository;
+
 
 
     @Override
@@ -22,8 +24,10 @@ public class ClientServiceImp implements ClientService {
     }
 
     @Override
-    public void consultation(long id) {
-        clienteRepository.findById(id);
+    public Client findById(long id) {
+        Optional<Client> client = clienteRepository.findById(id);
+        Client existingClient = client.get();
+        return existingClient;
     }
 
     @Override
