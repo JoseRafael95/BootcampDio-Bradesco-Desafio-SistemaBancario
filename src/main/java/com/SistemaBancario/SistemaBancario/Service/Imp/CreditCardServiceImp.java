@@ -18,9 +18,11 @@ public class CreditCardServiceImp implements CreditCardService {
     @Override
     public void newCard(Long id, CreditCard card) {
         Account account = accountRepository.findById(id).get();
-        CreditCard saveCard = creditCardRepository.save(card);
-        account.setCreditCard(saveCard);
 
+        card.setAccount(account);
+        CreditCard saveCard = creditCardRepository.save(card);
+
+        account.setCreditCard(saveCard);
         accountRepository.save(account);
 
     }

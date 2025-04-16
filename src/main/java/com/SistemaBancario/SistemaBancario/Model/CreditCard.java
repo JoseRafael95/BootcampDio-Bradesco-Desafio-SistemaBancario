@@ -14,6 +14,8 @@ public class CreditCard {
     private long number;
     private Date expirationDate;
     private double cardLimit;
+    @OneToOne
+    private Account account;
     @OneToMany(mappedBy = "creditCard")
     private List<Transaction> transactions;
 
@@ -47,5 +49,13 @@ public class CreditCard {
 
     public void setTransactions(List<Transaction> transactions) {
         this.transactions = transactions;
+    }
+
+    public Account getAccount() {
+        return account;
+    }
+
+    public void setAccount(Account account) {
+        this.account = account;
     }
 }
