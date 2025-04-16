@@ -1,5 +1,7 @@
 package com.SistemaBancario.SistemaBancario.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 
@@ -24,12 +26,9 @@ public class Transaction {
     @JoinColumn(name = "conta_destino_id")
     private Account contaDestino;
 
-    @ManyToOne
-    @JoinColumn(name = "credit_id")
-    private CreditCard creditCard;
 
     @ManyToOne
-    @JoinColumn(name="account")
+    @JoinColumn(name = "account")
     private Account account;
 
 
@@ -72,14 +71,8 @@ public class Transaction {
     public void setContaDestino(Account contaDestino) {
         this.contaDestino = contaDestino;
     }
-
-    public CreditCard getCreditCard() {
-        return creditCard;
-    }
-
-    public void setCreditCard(CreditCard creditCard) {
-        this.creditCard = creditCard;
-    }
 }
+
+
 
 

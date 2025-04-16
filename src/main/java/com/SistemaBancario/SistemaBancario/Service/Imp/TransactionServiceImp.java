@@ -7,6 +7,8 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import java.beans.Transient;
+import java.util.ArrayList;
+
 @Service
 public class TransactionServiceImp implements TransactionService {
     @Autowired
@@ -18,78 +20,83 @@ public class TransactionServiceImp implements TransactionService {
     @Autowired
     CreditCardRepository creditCardRepository;
 
-    @Override
-    public void trasaction(
-    String tipo,
-    double valueTransaction,
-    long contaOrigem,
-    long contaDestino,
-    double payCard ) {
+//    @Override
+//    public void trasaction(
+//    String tipo,
+//    double valueTransaction,
+//    long contaOrigem,
+//    long contaDestino,
+//    double payCard ) {
+//
+//
+//    }
 
-
-    }
     @Transactional
-    public Transaction transferencia(Long conta_destino_id, Long conta_origem_id, Double valor){
-        Account contaOrigem = accountRepository.findById(conta_origem_id)
-                .orElseThrow(() -> new RuntimeException("Conta origem não encontrada"));
+    public Transaction transfer(Long destinationAccountId, Long originAccountId, Double valueTransfer){
+        Account originAccount = accountRepository.findById(originAccountId)
+                .orElseThrow(() -> new RuntimeException("Origin account not found"));
 
-        Account contaDestino = accountRepository.findById(conta_destino_id)
-                .orElseThrow(() -> new RuntimeException("Conta destino não encotrada"));
+        Account destinationAccount = accountRepository.findById(destinationAccountId)
+                .orElseThrow(() -> new RuntimeException("Destination account not found"));
 
-        if(contaOrigem.getBalance() < valor ){
-            throw new RuntimeException("Saldo insulficiente");
+        if(originAccount.getBalance() < valueTransfer ){
+            throw new RuntimeException("Insufficient balance");
         }else{
-            contaOrigem.setBalance(contaOrigem.getBalance() - valor);
-            contaDestino.setBalance(contaDestino.getBalance() + valor);
+            originAccount.setBalance(originAccount.getBalance() - valueTransfer);
+            destinationAccount.setBalance(destinationAccount.getBalance() + valueTransfer);
         }
 
-        Transaction tranferencia = new Transaction();
-        tranferencia.setTipo("TRANSFERENCIA");
-        tranferencia.setContaOrigem(contaOrigem);
-        tranferencia.setContaDestino(contaDestino);
-        tranferencia.setValueTransaction(valor);
-         return transactionRepository.save(tranferencia);
-
-
+        Transaction transaction = new Transaction();
+        transaction.setTipo("TRANSFER");
+        transaction.setContaOrigem(originAccount);
+        transaction.setContaDestino(destinationAccount);
+        transaction.setValueTransaction(valueTransfer);
+        return transactionRepository.save(transaction);
     }
 
     @Transactional
-    public Transaction deposito(Long id, double valor ){
-        Account conta = accountRepository.findById(id)
-                .orElseThrow(()-> new RuntimeException("Conta não encotrada"));
-        if(valor < 0){
-            throw new RuntimeException("Valor invalido");
+    public Transaction deposit(Long id, double valueDeposit ){
+        Account account = accountRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Account not found"));
+        if(valueDeposit < 0){
+            throw new RuntimeException("Invalid amount");
         }else {
-            conta.setBalance(conta.getBalance() + valor);
+            account.setBalance(account.getBalance() + valueDeposit);
         }
-        accountRepository.save(conta);
-        Transaction transacao = new Transaction();
-        transacao.setTipo("DEPOSITO");
-        transacao.setValueTransaction(valor);
-        transacao.setContaDestino(conta);
+        accountRepository.save(account);
+        Transaction transaction = new Transaction();
+        transaction.setTipo("DEPOSIT");
+        transaction.setValueTransaction(valueDeposit);
+        transaction.setContaDestino(account);
 
-        return transactionRepository.save(transacao);
-
+        return transactionRepository.save(transaction);
     }
 
     @Transactional
-    public Transaction compra(Long id, double valor) {
-        CreditCard cartao = creditCardRepository.findById(id)
-                .orElseThrow(() -> new RuntimeException("Cartão não encotrado."));
+    public Transaction buy(Long id, double valueBuy) {
+        CreditCard card = creditCardRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Card not found."));
 
-        if (valor > cartao.getCardLimit()) {
-            throw new RuntimeException("Valor é superior ao limite do cartão");
+        Account account =  accountRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("Account not fount"));
+
+        if (valueBuy > card.getCardLimit()) {
+            throw new RuntimeException("Amount exceeds card limit");
         }
-        Account conta = cartao.getAccount();
-        conta.setBalance(conta.getBalance() - valor);
+        Account accountCard = card.getAccount();
+        account.setBalance(accountCard.getBalance() - valueBuy);
 
-        Transaction transacao = new Transaction();
-        transacao.setTipo("COMPRA");
-        transacao.setContaOrigem(conta);
-        transacao.setValueTransaction(valor);
+        Transaction transaction = new Transaction();
 
-        return transactionRepository.save(transacao);
+        transaction.setTipo("PURCHASE");
+        transaction.setContaOrigem(accountCard);
+        transaction.setValueTransaction(valueBuy);
 
+        creditCardRepository.save(card);
+
+        account.getTransactions().add(transaction);
+        accountRepository.save(account);
+
+        return transactionRepository.save(transaction);
     }
-
 }

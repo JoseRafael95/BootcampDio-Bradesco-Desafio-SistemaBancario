@@ -1,5 +1,7 @@
 package com.SistemaBancario.SistemaBancario.Model;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 import java.util.Date;
@@ -15,9 +17,10 @@ public class CreditCard {
     private Date expirationDate;
     private double cardLimit;
     @OneToOne
+    @JoinColumn(name = "account_id")
+    @JsonIgnore
     private Account account;
-    @OneToMany(mappedBy = "creditCard")
-    private List<Transaction> transactions;
+
 
     public long getNumber() {
         return number;
@@ -41,14 +44,6 @@ public class CreditCard {
 
     public void setCardLimit(double cardLimit) {
         this.cardLimit = cardLimit;
-    }
-
-    public List<Transaction> getTransactions() {
-        return transactions;
-    }
-
-    public void setTransactions(List<Transaction> transactions) {
-        this.transactions = transactions;
     }
 
     public Account getAccount() {

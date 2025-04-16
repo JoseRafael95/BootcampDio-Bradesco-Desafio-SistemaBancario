@@ -25,15 +25,15 @@ public class ClientServiceImp implements ClientService {
 
     @Override
     public Client findById(long id) {
-        Optional<Client> client = clienteRepository.findById(id);
-        Client existingClient = client.get();
-        return existingClient;
+        Client client = clienteRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("Client not found"));
+        return client;
     }
 
     @Override
     public void update(long id, Client client) {
-        Optional<Client> existingClientOptional = clienteRepository.findById(id);
-        Client existingClient = existingClientOptional.get();
+        Client existingClient = clienteRepository.findById(id)
+                .orElseThrow(() -> new RuntimeException("Client not found"));
         existingClient.setId(id);
         existingClient.setName(client.getName());
         existingClient.setEmail(client.getEmail());

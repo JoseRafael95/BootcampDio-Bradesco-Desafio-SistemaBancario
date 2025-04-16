@@ -2,6 +2,7 @@ package com.SistemaBancario.SistemaBancario.Model;
 
 import jakarta.persistence.*;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Entity
@@ -16,8 +17,8 @@ public class Account {
     @OneToOne
     @JoinColumn(name ="creditCard")
     private CreditCard creditCard;
-    @OneToMany(mappedBy = "account")
-    private List<Transaction> transactions;
+    @OneToMany(mappedBy = "account", cascade = CascadeType.ALL)
+    private List<Transaction> transactions = new ArrayList<>();
 
     public long getId() {
         return id;

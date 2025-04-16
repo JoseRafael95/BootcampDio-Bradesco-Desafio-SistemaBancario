@@ -1,11 +1,20 @@
 package com.SistemaBancario.SistemaBancario.Service;
 
+import com.SistemaBancario.SistemaBancario.Model.Transaction;
+
 public interface TransactionService {
- void trasaction(
-         String tipo,
-         double valueTransaction,
-         long contaOrigem,
-         long contaDestino,
-         double payCard
- );
+
+
+ Transaction transfer(
+         Long destinationAccoutId,
+         Long originAccountId,
+         Double valueTransfer);
+
+ Transaction deposit(
+         Long id,
+         double valor );
+
+Transaction buy(Long id,
+                double valor);
+
 }

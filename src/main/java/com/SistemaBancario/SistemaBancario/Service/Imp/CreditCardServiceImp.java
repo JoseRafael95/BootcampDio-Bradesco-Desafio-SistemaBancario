@@ -12,12 +12,11 @@ public class CreditCardServiceImp implements CreditCardService {
     CreditCardRepository creditCardRepository;
     @Autowired
     AccountRepository accountRepository;
-    @Autowired
-    ClientRepository clientRepository;
 
     @Override
     public void newCard(Long id, CreditCard card) {
-        Account account = accountRepository.findById(id).get();
+        Account account = accountRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("Account not found"));
 
         card.setAccount(account);
         CreditCard saveCard = creditCardRepository.save(card);
@@ -28,7 +27,8 @@ public class CreditCardServiceImp implements CreditCardService {
     }
     @Override
     public void deleteCard(Long id) {
-        Account account = accountRepository.findById(id).get();
+        Account account = accountRepository.findById(id)
+                .orElseThrow(()-> new RuntimeException("Account not found"));
         account.setCreditCard(null);
 
         creditCardRepository.deleteById(id);

@@ -13,17 +13,17 @@ public class TransactionController {
 
     @PostMapping("/transferencia")
     void traferir(@RequestParam long origem, @RequestParam long destino, @RequestParam double valor){
-        transaction.transferencia(destino,origem,valor);
+        transaction.transfer(destino,origem,valor);
 
     }
 
     @PostMapping("/deposito")
     void depositar(@RequestParam long id, @RequestParam double valor) {
-        transaction.deposito(id, valor);
+        transaction.deposit(id, valor);
     }
 
     @PostMapping("/compra")
         void compra(@RequestParam long id, @RequestParam double valor){
-        transaction.compra(id, valor);
+        transaction.buy(id, valor);
     }
 }
